@@ -1,7 +1,5 @@
 package com.example.calculator;
 
-import android.graphics.Path;
-
 import com.example.calculator.operations.AddSubtractOperation;
 import com.example.calculator.operations.ExponentOperation;
 import com.example.calculator.operations.MultiInputOperation;
