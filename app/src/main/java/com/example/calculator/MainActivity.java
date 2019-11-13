@@ -22,10 +22,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         put("divide","/");
         put("plus","+");
         put("minus","-");
-        put("exponent","^2");
-        put("exponent2","^");
+        put("exponent","^");
+        put("OpenParentheses","(");
+        put("CloseParentheses",")");
     }};
-    String[] str_buttons = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "times", "divide", "plus", "minus", "exponent", "exponent2", "C", "CE", "back", "dot", "PlusMinus", "equals"};
+    String[] str_buttons = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "times",
+            "divide", "plus", "minus", "exponent", "C", "CE", "back", "dot", "PlusMinus", "equals",
+            "OpenParentheses", "CloseParentheses"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,18 +66,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Button click = (Button) v;
             if (numbers.contains(buttons.get(click))) {
                 calculator.receiveNumber(buttons.get(click));
+
             } else if (operations.containsKey(buttons.get(click))) {
                 calculator.receiveOperator(operations.get(buttons.get(click)));
+
             } else if (buttons.get(click).equals("C")) {
                 calculator.clear();
+
             } else if (buttons.get(click).equals("CE")) {
                 calculator.clearEntry();
+
             } else if (buttons.get(click).equals("equals")) {
                 equalsPressed();
+
             } else if (buttons.get(click).equals("dot")) {
                 calculator.receiveDot();
+
             } else if (buttons.get(click).equals("PlusMinus")) {
                 calculator.receiveNegative();
+
             } else if (buttons.get(click).equals("back")) {
                 calculator.deleteLast();
             }

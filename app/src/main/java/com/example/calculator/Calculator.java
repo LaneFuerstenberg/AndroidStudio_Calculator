@@ -23,7 +23,7 @@ public class Calculator {
 
     public void receiveDot() {
         if (StringUtil.isOperator(stagingArea)) {
-            commitStagingArea(".");
+            commitStagingAreaAndReplace(".");
         } else if (!stagingArea.contains(".")) {
             stagingArea += ".";
         }
@@ -44,7 +44,7 @@ public class Calculator {
             stagingArea = operator;
 
         } else {
-            commitStagingArea(operator);
+            commitStagingAreaAndReplace(operator);
             resetStagingArea = false;
         }
 
@@ -52,7 +52,7 @@ public class Calculator {
 
     public void receiveNumber(String number) {
         if (StringUtil.isOperator(stagingArea)) {
-            commitStagingArea(number);
+            commitStagingAreaAndReplace(number);
 
         } else {
             if (resetStagingArea) {
@@ -79,7 +79,8 @@ public class Calculator {
         if (stagingArea.equals("") || StringUtil.isOperator(stagingArea)) {
             return outputDisplay();
         }
-        commitStagingArea();
+
+        commitStagingAreaAndReplace();
         stagingArea = arithmeticHandler.calculateAndEmptyContents(expression);
         resetStagingArea = true;
 
@@ -87,7 +88,7 @@ public class Calculator {
     }
 
 
-    private void commitStagingArea(String input) {
+    private void commitStagingAreaAndReplace(String input) {
         if (stagingArea.equals("")) {
             return;
         }
@@ -96,8 +97,8 @@ public class Calculator {
         stagingArea = input;
     }
 
-    private void commitStagingArea() {
-        commitStagingArea("");
+    private void commitStagingAreaAndReplace() {
+        commitStagingAreaAndReplace("");
     }
 
     public void deleteLast() {
@@ -113,5 +114,9 @@ public class Calculator {
 
     public void clearEntry() {
         stagingArea = "";
+    }
+
+    private boolean isLastInputEqualTo(char c) {
+        return stagingArea.charAt(stagingArea.length() - 1) != c;
     }
 }
