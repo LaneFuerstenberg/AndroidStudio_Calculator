@@ -6,44 +6,39 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 
-import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Calculator calculator;
+    Map<Button, String> buttons = new HashMap<>();
+    String[] str_num = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    List<String> numbers = Arrays.asList(str_num);
+    Map<String, String> operations = new HashMap<String, String>(){{
+        put("times","*");
+        put("divide","/");
+        put("plus","+");
+        put("minus","-");
+        put("exponent","^2");
+        put("exponent2","^");
+    }};
+    String[] str_buttons = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "times", "divide", "plus", "minus", "exponent", "exponent2", "C", "CE", "back", "dot", "PlusMinus", "equals"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         calculator = new Calculator();
+        for (String butts : str_buttons) {
+            buttons.put((Button) findViewById(getResources().getIdentifier("btn_" + butts, "id",
+                    this.getPackageName())) , butts);
 
-        ArrayList<Button> buttons = new ArrayList<>();
-        buttons.add((Button) findViewById(R.id.btn_0));
-        buttons.add((Button) findViewById(R.id.btn_1));
-        buttons.add((Button) findViewById(R.id.btn_2));
-        buttons.add((Button) findViewById(R.id.btn_3));
-        buttons.add((Button) findViewById(R.id.btn_4));
-        buttons.add((Button) findViewById(R.id.btn_5));
-        buttons.add((Button) findViewById(R.id.btn_6));
-        buttons.add((Button) findViewById(R.id.btn_7));
-        buttons.add((Button) findViewById(R.id.btn_8));
-        buttons.add((Button) findViewById(R.id.btn_9));
-        buttons.add((Button) findViewById(R.id.btn_plus));
-        buttons.add((Button) findViewById(R.id.btn_minus));
-        buttons.add((Button) findViewById(R.id.btn_times));
-        buttons.add((Button) findViewById(R.id.btn_divide));
-        buttons.add((Button) findViewById(R.id.btn_equals));
-        buttons.add((Button) findViewById(R.id.btn_C));
-        buttons.add((Button) findViewById(R.id.btn_CE));
-        buttons.add((Button) findViewById(R.id.btn_back));
-        buttons.add((Button) findViewById(R.id.btn_dot));
-        buttons.add((Button) findViewById(R.id.btn_exponent2));
-        buttons.add((Button) findViewById(R.id.btn_exponent));
-        buttons.add((Button) findViewById(R.id.btn_PlusMinus));
-
-        for (Button b : buttons) {
+        }
+        for (Map.Entry<Button, String> entry : buttons.entrySet()) {
+            Button b = (entry.getKey());
             b.setOnClickListener(this);
         }
     }
@@ -54,18 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void renderElements() {
         String display = calculator.outputDisplay();
         TextView txt_display = findViewById(R.id.txt_display);
-
         txt_display.setText(display);
-    }
-
-    private void operatorInput(String input) {
-        calculator.receiveOperator(input);
-        renderElements();
-    }
-
-    private void numberInput(String input) {
-        calculator.receiveNumber(input);
-        renderElements();
     }
 
     private void equalsPressed() {
@@ -75,96 +59,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_0:
-                numberInput("0");
-                break;
-
-            case R.id.btn_1:
-                numberInput("1");
-                break;
-
-            case  R.id.btn_2:
-                numberInput("2");
-                break;
-
-            case R.id.btn_3:
-                numberInput("3");
-                break;
-
-            case R.id.btn_4:
-                numberInput("4");
-                break;
-
-            case R.id.btn_5:
-                numberInput("5");
-                break;
-
-            case R.id.btn_6:
-                numberInput("6");
-                break;
-
-            case R.id.btn_7:
-                numberInput("7");
-                break;
-
-            case R.id.btn_8:
-                numberInput("8");
-                break;
-
-            case R.id.btn_9:
-                numberInput("9");
-                break;
-
-            case R.id.btn_plus:
-                operatorInput("+");
-                break;
-
-            case R.id.btn_minus:
-                operatorInput("-");
-                break;
-
-            case R.id.btn_times:
-                operatorInput("*");
-                break;
-
-            case R.id.btn_divide:
-                operatorInput("/");
-                break;
-
-            case R.id.btn_equals:
-                equalsPressed();
-                break;
-
-            case R.id.btn_C:
+        if(v != null) {
+            Button click = (Button) v;
+            if (numbers.contains(buttons.get(click))) {
+                calculator.receiveNumber(buttons.get(click));
+            } else if (operations.containsKey(buttons.get(click))) {
+                calculator.receiveOperator(operations.get(buttons.get(click)));
+            } else if (buttons.get(click).equals("C")) {
                 calculator.clear();
-                renderElements();
-                break;
-
-            case R.id.btn_CE:
+            } else if (buttons.get(click).equals("CE")) {
                 calculator.clearEntry();
-                renderElements();
-                break;
-
-            case R.id.btn_back:
-                calculator.deleteLast();
-                renderElements();
-                break;
-
-            case R.id.btn_dot:
+            } else if (buttons.get(click).equals("equals")) {
+                equalsPressed();
+            } else if (buttons.get(click).equals("dot")) {
                 calculator.receiveDot();
-                renderElements();
-                break;
-
-            case R.id.btn_exponent:
-                calculator.receiveOperator("^");
-                renderElements();
-                break;
-
-            case R.id.btn_PlusMinus:
+            } else if (buttons.get(click).equals("PlusMinus")) {
                 calculator.receiveNegative();
-                renderElements();
-                break;
+            } else if (buttons.get(click).equals("back")) {
+                calculator.deleteLast();
+            }
+            renderElements();
         }
     }
 }
+

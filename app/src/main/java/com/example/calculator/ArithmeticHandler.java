@@ -1,11 +1,8 @@
 package com.example.calculator;
 
 import com.example.calculator.operations.AddSubtractOperation;
-import com.example.calculator.operations.ExponentOperation;
-import com.example.calculator.operations.MultiInputOperation;
 import com.example.calculator.operations.MultiplyDivideOperation;
 import com.example.calculator.operations.Operation;
-import com.example.calculator.operations.SingleInputOperation;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -21,7 +18,6 @@ public class ArithmeticHandler {
         this.contents = contents;
 
         Operation[] operations = new Operation[]{
-                new ExponentOperation(),
                 new MultiplyDivideOperation(),
                 new AddSubtractOperation()
         };
@@ -59,23 +55,14 @@ public class ArithmeticHandler {
         for (int i = 0; i < contents.size(); i++) {
 
             String result = contents.get(i);
-            if (matchesAny(searchTerms, result)) {
+            if (result.equals(searchTerms[0])
+                    || result.equals(searchTerms[1])) {
                 return i;
             }
         }
 
         //should never occur since we validate that a + or - exists before running
         return -1;
-    }
-
-    private boolean matchesAny(String[] searchTerms, String word) {
-        for (String s : searchTerms) {
-            if (word.equals(s)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     //receives index in array and processes the value before and after index
@@ -103,17 +90,9 @@ public class ArithmeticHandler {
                 new BigDecimal(contents.get(index - 1)),
                 new BigDecimal(contents.get(index + 1))};
 
-        BigDecimal result = new BigDecimal(0);
 
-        if (o instanceof MultiInputOperation) {
-            String operator = contents.get(index); //only 1 char anyway index is needed
-            MultiInputOperation newO = (MultiInputOperation) o;
-            result = newO.handleOperation(operator, variables);
-
-        } else if (o instanceof SingleInputOperation) {
-            SingleInputOperation newO = (SingleInputOperation) o;
-            result = newO.handleOperation(variables);
-        }
+        String operator = contents.get(index); //only 1 char anyway index is needed
+        BigDecimal result = o.handleOperation(operator, variables);
 
         return result;
     }

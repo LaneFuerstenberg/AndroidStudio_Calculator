@@ -23,7 +23,7 @@ public class Calculator {
 
     public void receiveDot() {
         if (StringUtil.isOperator(stagingArea)) {
-            commitStagingAreaAndReplace(".");
+            commitStagingArea(".");
         } else if (!stagingArea.contains(".")) {
             stagingArea += ".";
         }
@@ -40,18 +40,19 @@ public class Calculator {
     }
 
     public void receiveOperator(String operator) {
-        if (!stagingArea.isEmpty() && !StringUtil.isDigit(stagingArea)) {
+        if (StringUtil.isOperator(stagingArea)) {
             stagingArea = operator;
 
         } else {
-            commitStagingAreaAndReplace(operator);
+            commitStagingArea(operator);
             resetStagingArea = false;
         }
+
     }
 
     public void receiveNumber(String number) {
-        if (!stagingArea.isEmpty() && !StringUtil.isDigit(stagingArea)) {
-            commitStagingAreaAndReplace(number);
+        if (StringUtil.isOperator(stagingArea)) {
+            commitStagingArea(number);
 
         } else {
             if (resetStagingArea) {
@@ -78,17 +79,15 @@ public class Calculator {
         if (stagingArea.equals("") || StringUtil.isOperator(stagingArea)) {
             return outputDisplay();
         }
-
-        commitStagingAreaAndReplace();
+        commitStagingArea();
         stagingArea = arithmeticHandler.calculateAndEmptyContents(expression);
         resetStagingArea = true;
-
 
         return stagingArea;
     }
 
 
-    private void commitStagingAreaAndReplace(String input) {
+    private void commitStagingArea(String input) {
         if (stagingArea.equals("")) {
             return;
         }
@@ -97,8 +96,8 @@ public class Calculator {
         stagingArea = input;
     }
 
-    private void commitStagingAreaAndReplace() {
-        commitStagingAreaAndReplace("");
+    private void commitStagingArea() {
+        commitStagingArea("");
     }
 
     public void deleteLast() {
@@ -114,9 +113,5 @@ public class Calculator {
 
     public void clearEntry() {
         stagingArea = "";
-    }
-
-    private boolean isLastInputEqualTo(char c) {
-        return stagingArea.charAt(stagingArea.length() - 1) != c;
     }
 }
