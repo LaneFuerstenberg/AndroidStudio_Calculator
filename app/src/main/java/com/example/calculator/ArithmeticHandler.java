@@ -72,10 +72,10 @@ public class ArithmeticHandler {
 
         if (operation instanceof MultiInputOperation) {
             String operator = contents.get(index);
-            getResult(operation, variables, operator);
+            result = getResult(operation, variables, operator);
 
         } else if (operation instanceof SingleInputOperation) {
-            getResult(operation, variables);
+            result = getResult(operation, variables);
         }
 
         //not a typo removes the middle and last value used to calculateAndEmptyContents
