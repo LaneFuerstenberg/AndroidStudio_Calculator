@@ -9,18 +9,18 @@
 
 
     <Button
-        android:id="@+id/btn_exponent2"
+        android:id="@+id/btn_OpenParentheses"
         android:layout_width="90dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimary"
-        android:text="x^y"
+        android:text="("
         android:textColor="@color/colorAccent"
         android:textColorHighlight="@color/colorPrimaryDark"
         android:textColorHint="@color/colorAccent"
         android:textColorLink="@color/colorAccent"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_exponent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_minus4"
+        app:layout_constraintEnd_toStartOf="@+id/btn_CloseParentheses"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btn_exponent"
         app:layout_constraintTop_toTopOf="@+id/btn_exponent" />
@@ -37,27 +37,27 @@
         android:textColorLink="@color/colorAccent"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_percent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_exponent2"
+        app:layout_constraintEnd_toStartOf="@+id/btn_OpenParentheses"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btn_percent"
         app:layout_constraintTop_toTopOf="@+id/btn_percent" />
 
     <Button
-        android:id="@+id/btn_minus4"
+        android:id="@+id/btn_CloseParentheses"
         android:layout_width="90dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimary"
-        android:text="2"
+        android:text=")"
         android:textColor="@color/colorAccent"
         android:textColorHighlight="@color/colorPrimaryDark"
         android:textColorHint="@color/colorAccent"
         android:textColorLink="@color/colorAccent"
         android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_exponent2"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_OpenParentheses"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_exponent2"
-        app:layout_constraintTop_toTopOf="@+id/btn_exponent2" />
+        app:layout_constraintStart_toEndOf="@+id/btn_OpenParentheses"
+        app:layout_constraintTop_toTopOf="@+id/btn_OpenParentheses" />
 
     <Button
         android:id="@+id/btn_percent"

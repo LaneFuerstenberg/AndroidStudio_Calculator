@@ -40,17 +40,18 @@ public class Calculator {
     }
 
     public void receiveOperator(String operator) {
-        if (!stagingArea.isEmpty() && !StringUtil.isDigit(stagingArea)) {
+        if (StringUtil.isOperator(stagingArea)) {
             stagingArea = operator;
 
         } else {
             commitStagingAreaAndReplace(operator);
             resetStagingArea = false;
         }
+
     }
 
     public void receiveNumber(String number) {
-        if (!stagingArea.isEmpty() && !StringUtil.isDigit(stagingArea)) {
+        if (StringUtil.isOperator(stagingArea)) {
             commitStagingAreaAndReplace(number);
 
         } else {
@@ -82,7 +83,6 @@ public class Calculator {
         commitStagingAreaAndReplace();
         stagingArea = arithmeticHandler.calculateAndEmptyContents(expression);
         resetStagingArea = true;
-
 
         return stagingArea;
     }
