@@ -76,7 +76,7 @@ public class Calculator {
         }
     }
 
-    public boolean ifMoreOpenParenthesisExist() {
+    private boolean ifMoreOpenParenthesisExist() {
         int open = 0;
         int closed = 0;
 
