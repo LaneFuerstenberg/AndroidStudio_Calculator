@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         put("OpenParentheses","(");
         put("CloseParentheses",")");
     }};
+
     String[] str_buttons = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "times",
             "divide", "plus", "minus", "exponent", "C", "CE", "back", "dot", "PlusMinus", "equals",
             "OpenParentheses", "CloseParentheses"};

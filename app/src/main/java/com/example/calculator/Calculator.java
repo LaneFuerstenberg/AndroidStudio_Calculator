@@ -64,6 +64,33 @@ public class Calculator {
         }
     }
 
+    public void receiveOpenParenthesis() {
+        if (!StringUtil.isOperator(stagingArea)) {
+            stagingArea += "(";
+        }
+    }
+
+    public void receiveCloseParenthesis() {
+        if (!StringUtil.isOperator(stagingArea) && ifMoreOpenParenthesisExist()) {
+            stagingArea += ")";
+        }
+    }
+
+    public boolean ifMoreOpenParenthesisExist() {
+        int open = 0;
+        int closed = 0;
+
+        for (char s : stagingArea.toCharArray()) {
+            if (s == '(') {
+                open++;
+            } else if (s == ')') {
+                closed++;
+            }
+        }
+
+        return open > closed;
+    }
+
     public String outputDisplay() {
         String output = "";
 
