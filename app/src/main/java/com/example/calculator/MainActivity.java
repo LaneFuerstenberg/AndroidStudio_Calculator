@@ -23,8 +23,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         put("plus","+");
         put("minus","-");
         put("exponent","^");
-        put("OpenParentheses","(");
-        put("CloseParentheses",")");
     }};
 
     String[] str_buttons = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "times",
@@ -89,6 +87,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             } else if (buttons.get(click).equals("back")) {
                 calculator.deleteLast();
+
+            } else if (buttons.get(click).equals("OpenParentheses")) {
+                calculator.receiveOpenParenthesis();
+
+            } else if (buttons.get(click).equals("CloseParentheses")) {
+                calculator.receiveCloseParenthesis();
             }
             renderElements();
         }
