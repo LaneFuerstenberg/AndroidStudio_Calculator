@@ -26,8 +26,8 @@ public class ArithmeticHandler {
                 new AddSubtractOperation()
         };
 
-        for (Operation o : operations) {
-            processOperators(o);
+        for (Operation operation : operations) {
+            processOperators(operation);
         }
 
 
@@ -42,17 +42,17 @@ public class ArithmeticHandler {
     TODO: The coupling of ArithmeticHandler and the Operation subclasses is very tight
     TODO: Try to make this class work with more general operations and refactor it a ton
     */
-    private void processOperators(Operation o) {
+    private void processOperators(Operation operation) {
 
-        while (contentsHasOperator(o)) {
+        while (contentsHasOperator(operation)) {
 
-            int index = findIndex(o);
-            processIndex(index, o);
+            int index = findIndex(operation);
+            processIndex(index, operation);
         }
     }
 
-    private int findIndex(Operation o) {
-        String[] searchTerms = o.getOperators();
+    private int findIndex(Operation operation) {
+        String[] searchTerms = operation.getOperators();
 
 
         //looking for first instance of + or -
@@ -79,8 +79,8 @@ public class ArithmeticHandler {
     }
 
     //receives index in array and processes the value before and after index
-    private void processIndex(int index, Operation o) {
-        BigDecimal result = getResult(index, o);
+    private void processIndex(int index, Operation operation) {
+        BigDecimal result = getResult(index, operation);
 
         //not a typo removes the middle and last value used to calculateAndEmptyContents
         contents.remove(index);
@@ -94,7 +94,7 @@ public class ArithmeticHandler {
         contents.set(index - 1, df.format(result));
     }
 
-    private BigDecimal getResult(int index, Operation o) {
+    private BigDecimal getResult(int index, Operation operation) {
         if (contents.size() == index + 1) {
             return new BigDecimal(contents.get(index - 1));
         }
@@ -105,22 +105,22 @@ public class ArithmeticHandler {
 
         BigDecimal result = new BigDecimal(0);
 
-        if (o instanceof MultiInputOperation) {
+        if (operation instanceof MultiInputOperation) {
             String operator = contents.get(index); //only 1 char anyway index is needed
-            MultiInputOperation newO = (MultiInputOperation) o;
+            MultiInputOperation newO = (MultiInputOperation) operation;
             result = newO.handleOperation(operator, variables);
 
-        } else if (o instanceof SingleInputOperation) {
-            SingleInputOperation newO = (SingleInputOperation) o;
+        } else if (operation instanceof SingleInputOperation) {
+            SingleInputOperation newO = (SingleInputOperation) operation;
             result = newO.handleOperation(variables);
         }
 
         return result;
     }
 
-    private boolean contentsHasOperator(Operation o) {
-        for (String operation : o.getOperators()) {
-            if (contents.contains(operation)) {
+    private boolean contentsHasOperator(Operation operation) {
+        for (String o : operation.getOperators()) {
+            if (contents.contains(o)) {
                 return true;
             }
         }
