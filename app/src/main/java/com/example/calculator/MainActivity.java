@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             b.setOnClickListener(this);
         }
     }
+    //TODO: Add parentheses functionality
     //TODO: Add sliding menu from side for advanced operations
     //TODO: Improve overall gui
     //TODO: Fix decimal issue
