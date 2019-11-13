@@ -80,10 +80,10 @@ public class Calculator {
         int open = 0;
         int closed = 0;
 
-        for (char s : stagingArea.toCharArray()) {
-            if (s == '(') {
+        for (char c : stagingArea.toCharArray()) {
+            if (c == '(') {
                 open++;
-            } else if (s == ')') {
+            } else if (c == ')') {
                 closed++;
             }
         }
