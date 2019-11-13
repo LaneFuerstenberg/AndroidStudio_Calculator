@@ -27,7 +27,7 @@ public class ArithmeticHandler {
         };
 
         for (Operation operation : operations) {
-            processOperators(operation);
+            processOperationForExpression(operation);
         }
 
 
@@ -42,63 +42,28 @@ public class ArithmeticHandler {
     TODO: The coupling of ArithmeticHandler and the Operation subclasses is very tight
     TODO: Try to make this class work with more general operations and refactor it a ton
     */
-    private void processOperators(Operation operation) {
+    private void processOperationForExpression(Operation operation) {
 
         while (contentsHasOperator(operation)) {
+            String[] searchTerms = operation.getOperators();
+            int index = -1;
 
-            int index = findIndex(operation);
-            processIndex(index, operation);
-        }
-    }
+            //looking for first instance of + or -
+            for (int i = 0; i < contents.size(); i++) {
 
-    private int findIndex(Operation operation) {
-        String[] searchTerms = operation.getOperators();
-
-
-        //looking for first instance of + or -
-        for (int i = 0; i < contents.size(); i++) {
-
-            String result = contents.get(i);
-            if (matchesAny(searchTerms, result)) {
-                return i;
+                String result = contents.get(i);
+                if (matchesAny(searchTerms, result)) {
+                    index = i;
+                }
             }
-        }
 
-        //should never occur since we validate that a + or - exists before running
-        return -1;
+            processOperationAtIndex(index, operation);
+        }
     }
 
-    private boolean matchesAny(String[] searchTerms, String word) {
-        for (String s : searchTerms) {
-            if (word.equals(s)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     //receives index in array and processes the value before and after index
-    private void processIndex(int index, Operation operation) {
-        BigDecimal result = getResult(index, operation);
-
-        //not a typo removes the middle and last value used to calculateAndEmptyContents
-        contents.remove(index);
-        contents.remove(index);
-
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(9);
-        df.setMinimumFractionDigits(0);
-
-        //replace first value with result
-        contents.set(index - 1, df.format(result));
-    }
-
-    private BigDecimal getResult(int index, Operation operation) {
-        if (contents.size() == index + 1) {
-            return new BigDecimal(contents.get(index - 1));
-        }
-
+    private void processOperationAtIndex(int index, Operation operation) {
         BigDecimal[] variables = new BigDecimal[]{
                 new BigDecimal(contents.get(index - 1)),
                 new BigDecimal(contents.get(index + 1))};
@@ -115,7 +80,26 @@ public class ArithmeticHandler {
             result = newO.handleOperation(variables);
         }
 
-        return result;
+        //not a typo removes the middle and last value used to calculateAndEmptyContents
+        contents.remove(index);
+        contents.remove(index);
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(9);
+        df.setMinimumFractionDigits(0);
+
+        //replace first value with result
+        contents.set(index - 1, df.format(result));
+    }
+
+    private boolean matchesAny(String[] searchTerms, String word) {
+        for (String s : searchTerms) {
+            if (word.equals(s)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean contentsHasOperator(Operation operation) {
