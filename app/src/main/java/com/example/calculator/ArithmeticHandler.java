@@ -1,5 +1,7 @@
 package com.example.calculator;
 
+import android.graphics.Path;
+
 import com.example.calculator.operations.AddSubtractOperation;
 import com.example.calculator.operations.ExponentOperation;
 import com.example.calculator.operations.MultiInputOperation;
@@ -62,7 +64,7 @@ public class ArithmeticHandler {
     }
 
 
-    //receives index in array and processes the value before and after index
+    //receives index and processes the items left and right by the index (operation)
     private void processOperationAtIndex(int index, Operation operation) {
         BigDecimal[] variables = new BigDecimal[]{
                 new BigDecimal(contents.get(index - 1)),
@@ -71,13 +73,11 @@ public class ArithmeticHandler {
         BigDecimal result = new BigDecimal(0);
 
         if (operation instanceof MultiInputOperation) {
-            String operator = contents.get(index); //only 1 char anyway index is needed
-            MultiInputOperation newO = (MultiInputOperation) operation;
-            result = newO.handleOperation(operator, variables);
+            String operator = contents.get(index);
+            getResult(operation, variables, operator);
 
         } else if (operation instanceof SingleInputOperation) {
-            SingleInputOperation newO = (SingleInputOperation) operation;
-            result = newO.handleOperation(variables);
+            getResult(operation, variables);
         }
 
         //not a typo removes the middle and last value used to calculateAndEmptyContents
@@ -90,6 +90,16 @@ public class ArithmeticHandler {
 
         //replace first value with result
         contents.set(index - 1, df.format(result));
+    }
+
+    private BigDecimal getResult(Operation operation, BigDecimal[] variables) {
+        SingleInputOperation singleInputOperation = (SingleInputOperation) operation;
+        return singleInputOperation.handleOperation(variables);
+    }
+
+    private BigDecimal getResult(Operation operation, BigDecimal[] variables, String operator) {
+        MultiInputOperation multiInputOperation = (MultiInputOperation) operation;
+        return multiInputOperation.handleOperation(operator, variables);
     }
 
     private boolean matchesAny(String[] searchTerms, String word) {
