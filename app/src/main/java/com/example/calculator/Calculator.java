@@ -94,7 +94,7 @@ public class Calculator {
 
     private int numberOfCharInString(String word, char character) {
         int amount = 0;
-        for (char c : stagingArea.toCharArray()) {
+        for (char c : word.toCharArray()) {
             if (c == character) {
                 amount++;
 
