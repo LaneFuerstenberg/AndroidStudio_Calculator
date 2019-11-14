@@ -20,6 +20,13 @@ public class ArithmeticHandler {
         while (contents.contains("(")) {
             int indexStart = contents.indexOf("(") + 1;
             int indexEnd = contents.indexOf(")");
+
+            if (indexStart != 0 && !StringUtil.isOperator(contents.get(indexStart - 1))) {
+                contents.add(indexStart - 1, "*");
+                indexStart++;
+                indexEnd++;
+            }
+
             ArrayList newArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
 
             String result = calculateAndEmptyContents(newArray);
