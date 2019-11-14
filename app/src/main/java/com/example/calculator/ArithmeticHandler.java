@@ -18,23 +18,7 @@ public class ArithmeticHandler {
 
     public String calculateAndEmptyContents(ArrayList<String> contents) {
         while (contents.contains("(")) {
-            int indexStart = contents.indexOf("(") + 1;
-            int indexEnd = contents.indexOf(")");
-
-            if (indexStart != 0 && !StringUtil.isOperator(contents.get(indexStart - 1))) {
-                contents.add(indexStart - 1, "*");
-                indexStart++;
-                indexEnd++;
-            }
-
-            ArrayList newArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
-
-            String result = calculateAndEmptyContents(newArray);
-            for (int i = 0; i <= indexEnd - indexStart; i++) {
-                contents.remove(indexStart);
-            }
-
-            contents.set(indexStart - 1, result);
+            parenthesisRecursion(contents);
         }
 
         Operation[] operations = new Operation[]{
@@ -53,6 +37,27 @@ public class ArithmeticHandler {
         contents.remove(0);
 
         return result;
+    }
+
+    private void parenthesisRecursion(ArrayList<String> contents) {
+        int indexStart = contents.indexOf("(") + 1;
+        int indexEnd = contents.indexOf(")");
+
+        //inserts * at #( instance
+        if (indexStart != 0 && !StringUtil.isOperator(contents.get(indexStart - 1))) {
+            contents.add(indexStart - 1, "*");
+            indexStart++;
+            indexEnd++;
+        }
+
+        ArrayList newArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
+
+        String result = calculateAndEmptyContents(newArray);
+        for (int i = 0; i <= indexEnd - indexStart; i++) {
+            contents.remove(indexStart);
+        }
+
+        contents.set(indexStart - 1, result);
     }
 
     /*
