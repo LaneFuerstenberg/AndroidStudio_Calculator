@@ -51,7 +51,7 @@ public class Calculator {
     }
 
     public void receiveNumber(String number) {
-        if (StringUtil.isOperator(stagingArea) || stagingArea.equals("(") || stagingArea.equals(")")) {
+        if (StringUtil.isOperator(stagingArea)) {
             commitStagingAreaAndReplace(number);
 
         } else {
@@ -65,20 +65,14 @@ public class Calculator {
     }
 
     public void receiveOpenParenthesis() {
-        if (stagingArea.isEmpty()) {
-            stagingArea = "(";
-        } else {
-            commitStagingAreaAndReplace(")");
+        if (!StringUtil.isOperator(stagingArea)) {
+            stagingArea += "(";
         }
     }
 
     public void receiveCloseParenthesis() {
-        if (areMoreOpenThanClosedParenthesis()) {
-            if (stagingArea.isEmpty()) {
-                stagingArea = ")";
-            } else {
-                commitStagingAreaAndReplace(")");
-            }
+        if (!StringUtil.isOperator(stagingArea) && areMoreOpenThanClosedParenthesis()) {
+            stagingArea += ")";
         }
     }
 
