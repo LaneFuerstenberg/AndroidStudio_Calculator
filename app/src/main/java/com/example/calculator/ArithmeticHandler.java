@@ -15,7 +15,6 @@ import java.util.ArrayList;
 Is represented by Calculator class to handle calculations specifically.
  */
 public class ArithmeticHandler {
-    private ArrayList<String> contents;
 
     public String calculateAndEmptyContents(ArrayList<String> contents) {
         this.contents = contents;
@@ -33,7 +32,7 @@ public class ArithmeticHandler {
         };
 
         for (Operation operation : operations) {
-            processOperators(operation);
+            processOperators(operation, contents);
         }
 
 
@@ -48,16 +47,16 @@ public class ArithmeticHandler {
     TODO: The coupling of ArithmeticHandler and the Operation subclasses is very tight
     TODO: Try to make this class work with more general operations and refactor it a ton
     */
-    private void processOperators(Operation operation) {
+    private void processOperators(Operation operation, ArrayList<String> contents) {
 
-        while (contentsHasOperator(operation)) {
+        while (contentsHasOperator(operation, contents)) {
 
-            int index = findIndex(operation);
-            processIndex(index, operation);
+            int index = findIndex(operation, contents);
+            processIndex(index, operation, contents);
         }
     }
 
-    private int findIndex(Operation operation) {
+    private int findIndex(Operation operation, ArrayList<String> contents) {
         String[] searchTerms = operation.getOperators();
 
 
@@ -85,8 +84,8 @@ public class ArithmeticHandler {
     }
 
     //receives index in array and processes the value before and after index
-    private void processIndex(int index, Operation operation) {
-        BigDecimal result = getResult(index, operation);
+    private void processIndex(int index, Operation operation, ArrayList<String> contents) {
+        BigDecimal result = getResult(index, operation, contents);
 
         //not a typo removes the middle and last value used to calculateAndEmptyContents
         contents.remove(index);
@@ -100,7 +99,7 @@ public class ArithmeticHandler {
         contents.set(index - 1, df.format(result));
     }
 
-    private BigDecimal getResult(int index, Operation operation) {
+    private BigDecimal getResult(int index, Operation operation, ArrayList<String> contents) {
         if (contents.size() == index + 1) {
             return new BigDecimal(contents.get(index - 1));
         }
@@ -124,7 +123,7 @@ public class ArithmeticHandler {
         return result;
     }
 
-    private boolean contentsHasOperator(Operation operation) {
+    private boolean contentsHasOperator(Operation operation, ArrayList<String> contents) {
         for (String o : operation.getOperators()) {
             if (contents.contains(o)) {
                 return true;
