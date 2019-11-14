@@ -1,7 +1,8 @@
 package com.example.calculator;
 
 public class StringUtil {
-    private static final char[] OPERATOR = new char[] { '+', '-', '/', '*', '^' };
+    private static final char[] OPERATOR = new char[] {'+', '-', '/', '*', '^'};
+    private static final char[] MODIFIER = new char[] {'(', ')'};
 
     public static boolean isOperator(String input) {
         for (char operator : OPERATOR) {
@@ -10,6 +11,15 @@ public class StringUtil {
             }
         }
 
+        return false;
+    }
+
+    public static boolean isParenthesis(String input) {
+        for (char modifier : MODIFIER) {
+            if (input.equals(Character.toString(modifier))) {
+                return true;
+            }
+        }
         return false;
     }
 
