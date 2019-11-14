@@ -51,7 +51,7 @@ public class Calculator {
     }
 
     public void receiveNumber(String number) {
-        if (StringUtil.isOperator(stagingArea)) {
+        if (StringUtil.isOperator(stagingArea) || stagingArea.equals("(") || stagingArea.equals(")")) {
             commitStagingAreaAndReplace(number);
 
         } else {
@@ -65,30 +65,49 @@ public class Calculator {
     }
 
     public void receiveOpenParenthesis() {
-        if (!StringUtil.isOperator(stagingArea)) {
-            stagingArea += "(";
+        if (stagingArea.isEmpty()) {
+            stagingArea = "(";
+        } else {
+            commitStagingAreaAndReplace("(");
         }
     }
 
     public void receiveCloseParenthesis() {
-        if (!StringUtil.isOperator(stagingArea) && ifMoreOpenParenthesisExist()) {
-            stagingArea += ")";
+        if (areMoreOpenThanClosedParenthesis()) {
+            if (stagingArea.isEmpty()) {
+                stagingArea = ")";
+            } else {
+                commitStagingAreaAndReplace(")");
+            }
         }
     }
 
-    private boolean ifMoreOpenParenthesisExist() {
+    private boolean areMoreOpenThanClosedParenthesis() {
         int open = 0;
         int closed = 0;
 
-        for (char c : stagingArea.toCharArray()) {
-            if (c == '(') {
-                open++;
-            } else if (c == ')') {
-                closed++;
+        for (String contents : expression) {
+            open += numberOfCharInString(contents, '(');
+            closed += numberOfCharInString(contents, ')');
+        }
+
+        open += numberOfCharInString(stagingArea, '(');
+        closed += numberOfCharInString(stagingArea, ')');
+
+        return open > closed;
+    }
+
+
+    private int numberOfCharInString(String word, char character) {
+        int amount = 0;
+        for (char c : word.toCharArray()) {
+            if (c == character) {
+                amount++;
+
             }
         }
 
-        return open > closed;
+        return amount;
     }
 
     public String outputDisplay() {
@@ -141,9 +160,5 @@ public class Calculator {
 
     public void clearEntry() {
         stagingArea = "";
-    }
-
-    private boolean isLastInputEqualTo(char c) {
-        return stagingArea.charAt(stagingArea.length() - 1) != c;
     }
 }
