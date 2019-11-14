@@ -39,10 +39,10 @@ public class ArithmeticHandler {
                 if (!StringUtil.isOperator(formula2.get(form2length - 1)) &&
                         character.equals("(")) {
                     formula2.add("*");
+                    formula2.add("");
                 }
-                formula2.add(character);
+                formula2.set(formula2.size()-1, formula2.get(formula2.size() - 1) + character);
             }
-
         }
         if (openp == 0) {
             DetermineFormula(formula2);
@@ -53,6 +53,7 @@ public class ArithmeticHandler {
 
 
     public void DetermineFormula(ArrayList<String> formula) {
+
         System.out.println(formula.toString());
     }
 

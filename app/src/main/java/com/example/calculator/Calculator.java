@@ -35,7 +35,9 @@ public class Calculator {
             System.out.println(formula.get(formLength - 1));
         }
 
-        if (StringUtil.isOperator(expression) && !StringUtil.isOperator(formula.get(formLength -1))) {
+        if (StringUtil.isOperator(expression) &&
+           !StringUtil.isOperator(formula.get(formLength -1)) &&
+           (!formula.get(formLength -1).equals("("))) {
                 formula.add(expression);
 
         } else if (StringUtil.isDigit(expression) ||
