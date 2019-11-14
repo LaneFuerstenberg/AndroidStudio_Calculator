@@ -15,7 +15,6 @@ import java.util.ArrayList;
 Is represented by Calculator class to handle calculations specifically.
  */
 public class ArithmeticHandler {
-
     public String calculateAndEmptyContents(ArrayList<String> contents) {
         while (contents.contains("(")) {
             int indexStart = contents.indexOf("(") + 1;
@@ -44,7 +43,7 @@ public class ArithmeticHandler {
         };
 
         for (Operation operation : operations) {
-            processOperationForExpression(operation);
+            processOperationForExpression(operation, contents);
         }
 
 
@@ -55,13 +54,14 @@ public class ArithmeticHandler {
         return result;
     }
 
+
     /*
     TODO: The coupling of ArithmeticHandler and the Operation subclasses is very tight
     TODO: Try to make this class work with more general operations and refactor it a ton
     */
-    private void processOperationForExpression(Operation operation) {
+    private void processOperationForExpression(Operation operation, ArrayList<String> contents) {
 
-        while (contentsHasOperator(operation)) {
+        while (contentsHasOperator(operation, contents)) {
             String[] searchTerms = operation.getOperators();
             int index = -1;
 
@@ -74,13 +74,13 @@ public class ArithmeticHandler {
                 }
             }
 
-            processOperationAtIndex(index, operation);
+            processOperationAtIndex(index, operation, contents);
         }
     }
 
 
     //receives index and processes the items left and right by the index (operation)
-    private void processOperationAtIndex(int index, Operation operation) {
+    private void processOperationAtIndex(int index, Operation operation, ArrayList<String> contents) {
         BigDecimal[] variables = new BigDecimal[]{
                 new BigDecimal(contents.get(index - 1)),
                 new BigDecimal(contents.get(index + 1))};
@@ -116,11 +116,6 @@ public class ArithmeticHandler {
         MultiInputOperation multiInputOperation = (MultiInputOperation) operation;
         return multiInputOperation.handleOperation(operator, variables);
     }
-
-
-
-
-
 
     private boolean matchesAny(String[] searchTerms, String word) {
         for (String s : searchTerms) {
