@@ -71,12 +71,12 @@ public class Calculator {
     }
 
     public void receiveCloseParenthesis() {
-        if (!StringUtil.isOperator(stagingArea) && areMoreOpenThanClosedParenthesis()) {
+        if (!StringUtil.isOperator(stagingArea) && ifMoreOpenParenthesisExist()) {
             stagingArea += ")";
         }
     }
 
-    private boolean areMoreOpenThanClosedParenthesis() {
+    private boolean ifMoreOpenParenthesisExist() {
         int open = 0;
         int closed = 0;
 
