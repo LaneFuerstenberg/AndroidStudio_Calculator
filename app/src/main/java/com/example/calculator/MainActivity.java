@@ -15,8 +15,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Calculator calculator;
     Map<Button, String> buttons = new HashMap<>();
-    String[] str_num = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-    List<String> numbers = Arrays.asList(str_num);
     Map<String, String> operations = new HashMap<String, String>(){{
         put("times","*");
         put("divide","/");
@@ -61,14 +59,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View  v) {
         if(v != null) {
             Button click = (Button) v;
-            if (numbers.contains(buttons.get(click))) {
-                calculator.receiveNumber(buttons.get(click));
+            if (StringUtil.isDigit(buttons.get(click))) {
+                calculator.receiveRightmost(buttons.get(click));
+                //    calculator.receiveNumber(buttons.get(click));
 
             } else if (operations.containsKey(buttons.get(click))) {
-                calculator.receiveOperator(operations.get(buttons.get(click)));
+                calculator.receiveRightmost(operations.get(buttons.get(click)));
+                //calculator.receiveOperator(operations.get(buttons.get(click)));
 
             } else if (buttons.get(click).equals("C")) {
                 calculator.clear();
@@ -80,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 equalsPressed();
 
             } else if (buttons.get(click).equals("dot")) {
-                calculator.receiveDot();
+                calculator.receiveRightmost(".");
+                //calculator.receiveDot();
 
             } else if (buttons.get(click).equals("PlusMinus")) {
                 calculator.receiveNegative();
@@ -89,10 +90,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 calculator.deleteLast();
 
             } else if (buttons.get(click).equals("OpenParentheses")) {
-                calculator.receiveOpenParenthesis();
+
+                calculator.receiveRightmost("(");
+//                calculator.receiveOpenParenthesis();
 
             } else if (buttons.get(click).equals("CloseParentheses")) {
-                calculator.receiveCloseParenthesis();
+
+                calculator.receiveRightmost(")");
+//                calculator.receiveCloseParenthesis();
             }
             renderElements();
         }

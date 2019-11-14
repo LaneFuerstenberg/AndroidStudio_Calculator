@@ -1,6 +1,12 @@
 package com.example.calculator;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Queue;
 
 /*
 Calculator class is representative of the front end interface for the calculator application.
@@ -12,20 +18,30 @@ Calculator class uses stagingArea to prepare something to be added to a full exp
 Calculator class uses HAS-A relationship with ArithmeticHandler and will always contain 1 instance
 of this to handle calculations.
  */
+
+
 public class Calculator {
-    private ArrayList<String> expression = new ArrayList<>();
-    //contains the most recent entry when it's not set in stone to then be added to expression
+    private ArrayList<String> formula = new ArrayList<>();
+    //contains the most recent entry when it's not set in stone to then be added to formula
     private String stagingArea = "";
     //value used for clearing the staging area specifically after pressing equals
     private boolean resetStagingArea = false;
     //class that handles all calculations
     private ArithmeticHandler arithmeticHandler = new ArithmeticHandler();
 
-    public void receiveDot() {
-        if (StringUtil.isOperator(stagingArea)) {
-            commitStagingAreaAndReplace(".");
-        } else if (!stagingArea.contains(".")) {
-            stagingArea += ".";
+    public void receiveRightmost(String expression) {
+        int formLength = formula.size();
+        if (formLength > 0){
+            System.out.println(formula.get(formLength - 1));
+        }
+
+        if (StringUtil.isOperator(expression) && !StringUtil.isOperator(formula.get(formLength -1))) {
+                formula.add(expression);
+
+        } else if (StringUtil.isDigit(expression) ||
+                  (expression.equals(".") && !formula.get(formLength -1).equals(".")) ||
+                   StringUtil.isParenthesis(expression)){
+            formula.add(expression);
         }
     }
 
@@ -39,108 +55,39 @@ public class Calculator {
         }
     }
 
-    public void receiveOperator(String operator) {
-        if (StringUtil.isOperator(stagingArea)) {
-            stagingArea = operator;
-
-        } else {
-            commitStagingAreaAndReplace(operator);
-            resetStagingArea = false;
-        }
-
-    }
-
-    public void receiveNumber(String number) {
-        if (StringUtil.isOperator(stagingArea)) {
-            commitStagingAreaAndReplace(number);
-
-        } else {
-            if (resetStagingArea) {
-                stagingArea = number;
-                resetStagingArea = false;
-            } else {
-                stagingArea += number;
-            }
-        }
-    }
-
-    public void receiveOpenParenthesis() {
-        if (!StringUtil.isOperator(stagingArea)) {
-            stagingArea += "(";
-        }
-    }
-
-    public void receiveCloseParenthesis() {
-        if (!StringUtil.isOperator(stagingArea) && ifMoreOpenParenthesisExist()) {
-            stagingArea += ")";
-        }
-    }
-
-    private boolean ifMoreOpenParenthesisExist() {
-        int open = 0;
-        int closed = 0;
-
-        for (char c : stagingArea.toCharArray()) {
-            if (c == '(') {
-                open++;
-            } else if (c == ')') {
-                closed++;
-            }
-        }
-
-        return open > closed;
-    }
-
     public String outputDisplay() {
         String output = "";
-
-        for (String item : expression) {
+        for (String item : formula) {
             output += item;
         }
-
         output += stagingArea;
         return output;
     }
 
     public String calculate() {
-        if (stagingArea.equals("") || StringUtil.isOperator(stagingArea)) {
+        int formLength = formula.size();
+        if (formLength == 0 || StringUtil.isOperator(formula.get(formLength - 1))) {
             return outputDisplay();
         }
-
-        commitStagingAreaAndReplace();
-        stagingArea = arithmeticHandler.calculateAndEmptyContents(expression);
+        String output = arithmeticHandler.seperateFormula(formula);
         resetStagingArea = true;
 
-        return stagingArea;
-    }
-
-
-    private void commitStagingAreaAndReplace(String input) {
-        if (stagingArea.equals("")) {
-            return;
-        }
-
-        expression.add(stagingArea);
-        stagingArea = input;
-    }
-
-    private void commitStagingAreaAndReplace() {
-        commitStagingAreaAndReplace("");
+        return output;
     }
 
     public void deleteLast() {
-        if (!StringUtil.isOperator(stagingArea) && !stagingArea.equals("")) {
-            stagingArea = stagingArea.substring(0, stagingArea.length() - 1);
+        int formLength = formula.size();
+        if (formLength != 0){
+            formula.remove(formLength - 1);
         }
+
     }
 
     public void clear() {
-        expression.clear();
-        stagingArea = "";
+        formula.clear();
     }
 
     public void clearEntry() {
-        stagingArea = "";
     }
 
     private boolean isLastInputEqualTo(char c) {
