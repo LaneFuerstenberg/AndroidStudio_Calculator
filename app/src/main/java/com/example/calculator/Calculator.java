@@ -81,27 +81,27 @@ public class Calculator {
         int closed = 0;
 
         for (String contents : expression) {
-            for (char c : contents.toCharArray()) {
-
-                if (c == '(') {
-                    open++;
-
-                } else if (c == ')') {
-                    closed++;
-                }
-            }
+            open += numberOfCharInString(contents, '(');
+            closed += numberOfCharInString(contents, ')');
         }
 
-        for (char c : stagingArea.toCharArray()) {
-            if (c == '(') {
-                open++;
-
-            } else if (c == ')') {
-                closed++;
-            }
-        }
+        open += numberOfCharInString(stagingArea, '(');
+        closed += numberOfCharInString(stagingArea, ')');
 
         return open > closed;
+    }
+
+
+    private int numberOfCharInString(String word, char character) {
+        int amount = 0;
+        for (char c : stagingArea.toCharArray()) {
+            if (c == character) {
+                amount++;
+
+            }
+        }
+
+        return amount;
     }
 
     public String outputDisplay() {
@@ -154,9 +154,5 @@ public class Calculator {
 
     public void clearEntry() {
         stagingArea = "";
-    }
-
-    private boolean isLastInputEqualTo(char c) {
-        return stagingArea.charAt(stagingArea.length() - 1) != c;
     }
 }
