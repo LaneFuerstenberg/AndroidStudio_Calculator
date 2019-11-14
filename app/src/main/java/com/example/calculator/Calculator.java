@@ -68,7 +68,7 @@ public class Calculator {
         if (stagingArea.isEmpty()) {
             stagingArea = "(";
         } else {
-            commitStagingAreaAndReplace("(");
+            commitStagingAreaAndReplace(")");
         }
     }
 
