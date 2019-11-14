@@ -92,6 +92,15 @@ public class Calculator {
             }
         }
 
+        for (char c : stagingArea.toCharArray()) {
+            if (c == '(') {
+                open++;
+
+            } else if (c == ')') {
+                closed++;
+            }
+        }
+
         return open > closed;
     }
 
