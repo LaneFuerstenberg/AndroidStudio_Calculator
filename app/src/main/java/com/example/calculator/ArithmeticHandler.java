@@ -20,12 +20,6 @@ public class ArithmeticHandler {
     public String calculateAndEmptyContents(ArrayList<String> contents) {
         this.contents = contents;
 
-        if (contents.contains("(")) {
-            int indexStart = contents.indexOf("(");
-            int indexEnd = contents.indexOf(")");
-            calculateAndEmptyContents((ArrayList) contents.subList(indexStart, indexEnd));
-        }
-
         Operation[] operations = new Operation[]{
                 new ExponentOperation(),
                 new MultiplyDivideOperation(),
