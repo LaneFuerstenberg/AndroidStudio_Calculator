@@ -17,12 +17,17 @@ Is represented by Calculator class to handle calculations specifically.
 public class ArithmeticHandler {
 
     public String calculateAndEmptyContents(ArrayList<String> contents) {
-        this.contents = contents;
-
-        if (contents.contains("(")) {
-            int indexStart = contents.indexOf("(");
+        while (contents.contains("(")) {
+            int indexStart = contents.indexOf("(") + 1;
             int indexEnd = contents.indexOf(")");
-            calculateAndEmptyContents((ArrayList) contents.subList(indexStart, indexEnd));
+            ArrayList newArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
+
+            String result = calculateAndEmptyContents(newArray);
+            for (int i = 0; i <= indexEnd - indexStart; i++) {
+                contents.remove(indexStart);
+            }
+
+            contents.set(indexStart - 1, result);
         }
 
         Operation[] operations = new Operation[]{
