@@ -40,24 +40,63 @@ public class ArithmeticHandler {
     }
 
     private void parenthesisRecursion(ArrayList<String> contents) {
-        int indexStart = contents.indexOf("(") + 1;
-        int indexEnd = contents.indexOf(")");
+        ArrayList<String> oneLevelDownArray;
+        ArrayList<Integer> index = findAllOpenIndex(contents);
+        index.remove(Integer.valueOf(0));
 
-        //inserts * at #( instance
-        if (indexStart != 0 && !StringUtil.isOperator(contents.get(indexStart - 1))) {
-            contents.add(indexStart - 1, "*");
-            indexStart++;
-            indexEnd++;
+        for (int i : index) {
+            if (!StringUtil.isOperator(contents.get(i - 1))) {
+                contents.add(i, "*");
+            }
+
         }
 
-        ArrayList newArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
+        int indexStart = contents.indexOf("(") + 1;
+        int indexEnd = findCorrespondingEndParenthesis(indexStart, contents);
 
-        String result = calculateAndEmptyContents(newArray);
+        oneLevelDownArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
+
+        if (oneLevelDownArray.contains("(")) {
+            parenthesisRecursion(oneLevelDownArray);
+        }
+
+        String result = calculateAndEmptyContents(oneLevelDownArray);
         for (int i = 0; i <= indexEnd - indexStart; i++) {
             contents.remove(indexStart);
         }
 
         contents.set(indexStart - 1, result);
+    }
+
+    private int findCorrespondingEndParenthesis(int start, ArrayList<String> contents) {
+        //delay is used to skip the next ) if ( is found first
+        int delay = 0;
+        for (int i = start; i < contents.size(); i++) {
+            if (contents.get(i).equals("(")) {
+                delay++;
+
+            } else if (contents.get(i).equals(")")) {
+
+                if (delay != 0) {
+                    delay--;
+                } else {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private ArrayList<Integer> findAllOpenIndex(ArrayList<String> contents) {
+        ArrayList<Integer> allIndex = new ArrayList<>();
+        for (int i = 0; i < contents.size(); i++) {
+            if (contents.get(i).equals("(")) {
+                allIndex.add(i);
+            }
+        }
+
+        return allIndex;
     }
 
     /*
