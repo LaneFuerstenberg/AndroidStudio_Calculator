@@ -28,7 +28,7 @@ public class ArithmeticHandler {
         };
 
         for (Operation operation : operations) {
-            processOperators(operation, contents);
+            processOperationForExpression(operation, contents);
         }
 
 
