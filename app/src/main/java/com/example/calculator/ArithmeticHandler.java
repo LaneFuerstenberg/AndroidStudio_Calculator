@@ -44,9 +44,12 @@ public class ArithmeticHandler {
         int indexStart = contents.indexOf("(") + 1;
         int indexEnd = contents.lastIndexOf(")");
 
+        ArrayList<Integer> index = findAllOpenIndex(contents);
+        index.remove(Integer.valueOf(0));
+
         //inserts * at #( instance
-        if (indexStart != 0 && !StringUtil.isOperator(contents.get(indexStart - 1))) {
-            contents.add(indexStart - 1, "*");
+        for (int i : index) {
+            contents.add(i, "*");
             indexStart++;
             indexEnd++;
         }
@@ -64,6 +67,17 @@ public class ArithmeticHandler {
         }
 
         contents.set(indexStart - 1, result);
+    }
+
+    private ArrayList<Integer> findAllOpenIndex(ArrayList<String> contents) {
+        ArrayList<Integer> allIndex = new ArrayList<>();
+        for (int i = 0; i < contents.size(); i++) {
+            if (contents.get(i).equals("(")) {
+                allIndex.add(i);
+            }
+        }
+
+        return allIndex;
     }
 
     /*
