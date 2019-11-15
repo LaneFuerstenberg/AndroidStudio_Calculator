@@ -41,18 +41,18 @@ public class ArithmeticHandler {
 
     private void parenthesisRecursion(ArrayList<String> contents) {
         ArrayList<String> oneLevelDownArray;
-        int indexStart = contents.indexOf("(") + 1;
-        int indexEnd = contents.lastIndexOf(")");
-
         ArrayList<Integer> index = findAllOpenIndex(contents);
         index.remove(Integer.valueOf(0));
 
-        //inserts * at #( instance
         for (int i : index) {
-            contents.add(i, "*");
-            indexStart++;
-            indexEnd++;
+            if (!StringUtil.isOperator(contents.get(i - 1))) {
+                contents.add(i, "*");
+            }
+
         }
+
+        int indexStart = contents.indexOf("(") + 1;
+        int indexEnd = findCorrespondingEndParenthesis(indexStart, contents);
 
         oneLevelDownArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
 
@@ -60,13 +60,32 @@ public class ArithmeticHandler {
             parenthesisRecursion(oneLevelDownArray);
         }
 
-
         String result = calculateAndEmptyContents(oneLevelDownArray);
         for (int i = 0; i <= indexEnd - indexStart; i++) {
             contents.remove(indexStart);
         }
 
         contents.set(indexStart - 1, result);
+    }
+
+    private int findCorrespondingEndParenthesis(int start, ArrayList<String> contents) {
+        //delay is used to skip the next ) if ( is found first
+        int delay = 0;
+        for (int i = start; i < contents.size(); i++) {
+            if (contents.get(i).equals("(")) {
+                delay++;
+
+            } else if (contents.get(i).equals(")")) {
+
+                if (delay != 0) {
+                    delay--;
+                } else {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
     }
 
     private ArrayList<Integer> findAllOpenIndex(ArrayList<String> contents) {
