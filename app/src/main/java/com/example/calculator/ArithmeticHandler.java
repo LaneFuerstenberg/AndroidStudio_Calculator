@@ -40,8 +40,9 @@ public class ArithmeticHandler {
     }
 
     private void parenthesisRecursion(ArrayList<String> contents) {
+        ArrayList<String> oneLevelDownArray;
         int indexStart = contents.indexOf("(") + 1;
-        int indexEnd = contents.indexOf(")");
+        int indexEnd = contents.lastIndexOf(")");
 
         //inserts * at #( instance
         if (indexStart != 0 && !StringUtil.isOperator(contents.get(indexStart - 1))) {
@@ -50,9 +51,14 @@ public class ArithmeticHandler {
             indexEnd++;
         }
 
-        ArrayList newArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
+        oneLevelDownArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
 
-        String result = calculateAndEmptyContents(newArray);
+        if (oneLevelDownArray.contains("(")) {
+            parenthesisRecursion(oneLevelDownArray);
+        }
+
+
+        String result = calculateAndEmptyContents(oneLevelDownArray);
         for (int i = 0; i <= indexEnd - indexStart; i++) {
             contents.remove(indexStart);
         }
