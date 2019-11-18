@@ -16,9 +16,9 @@ Is represented by Calculator class to handle calculations specifically.
  */
 public class ArithmeticHandler {
 
-    public String calculateAndEmptyContents(ArrayList<String> contents) {
-        while (contents.contains("(")) {
-            parenthesisRecursion(contents);
+    public String calculateAndEmptyContents(ArrayList<String> expression) {
+        while (expression.contains("(")) {
+            parenthesisRecursion(expression);
         }
 
         Operation[] operations = new Operation[]{
@@ -28,23 +28,23 @@ public class ArithmeticHandler {
         };
 
         for (Operation operation : operations) {
-            processOperationForExpression(operation, contents);
+            processOperationForExpression(operation, expression);
         }
 
 
-        //done to leave contents array empty
-        String result = contents.get(0);
-        contents.remove(0);
+        //done to leave expression array empty
+        String result = expression.get(0);
+        expression.remove(0);
 
         return result;
     }
 
-    private void parenthesisRecursion(ArrayList<String> contents) {
-        addingImplicitMultiplication(contents);
+    private void parenthesisRecursion(ArrayList<String> expression) {
+        addingImplicitMultiplication(expression);
 
-        int indexStart = contents.indexOf("(") + 1;
-        int indexEnd = findCorrespondingEndParenthesis(indexStart, contents);
-        ArrayList<String> oneLevelDownArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
+        int indexStart = expression.indexOf("(") + 1;
+        int indexEnd = findCorrespondingEndParenthesis(indexStart, expression);
+        ArrayList<String> oneLevelDownArray = new ArrayList<>(expression.subList(indexStart, indexEnd));
 
         if (oneLevelDownArray.contains("(")) {
             parenthesisRecursion(oneLevelDownArray);
@@ -52,51 +52,51 @@ public class ArithmeticHandler {
 
         String result = calculateAndEmptyContents(oneLevelDownArray);
         for (int i = 0; i <= indexEnd - indexStart; i++) {
-            contents.remove(indexStart);
+            expression.remove(indexStart);
         }
 
-        contents.set(indexStart - 1, result);
+        expression.set(indexStart - 1, result);
     }
 
-    private void addingImplicitMultiplication(ArrayList<String> contents) {
-        ArrayList<Integer> index = findAllOpenIndex(contents);
+    private void addingImplicitMultiplication(ArrayList<String> expression) {
+        ArrayList<Integer> index = findAllOpenIndex(expression);
         index.remove(Integer.valueOf(0));
         for (int i : index) {
-            if (!StringUtil.isOperator(contents.get(i - 1))) {
-                contents.add(i, "*");
+            if (!StringUtil.isOperator(expression.get(i - 1))) {
+                expression.add(i, "*");
             }
         }
     }
 
-    private void processOperationForExpression(Operation operation, ArrayList<String> contents) {
+    private void processOperationForExpression(Operation operation, ArrayList<String> expression) {
 
-        while (contentsHasOperator(operation, contents)) {
+        while (contentsHasOperator(operation, expression)) {
             String[] searchTerms = operation.getOperators();
             int index = -1;
 
             //looking for first instance of + or -
-            for (int i = 0; i < contents.size(); i++) {
+            for (int i = 0; i < expression.size(); i++) {
 
-                String result = contents.get(i);
+                String result = expression.get(i);
                 if (matchesAny(searchTerms, result)) {
                     index = i;
                 }
             }
 
-            processOperationAtIndex(index, operation, contents);
+            processOperationAtIndex(index, operation, expression);
         }
     }
 
     //receives index and processes the items left and right by the index (operation)
-    private void processOperationAtIndex(int index, Operation operation, ArrayList<String> contents) {
+    private void processOperationAtIndex(int index, Operation operation, ArrayList<String> expression) {
         BigDecimal[] variables = new BigDecimal[]{
-                new BigDecimal(contents.get(index - 1)),
-                new BigDecimal(contents.get(index + 1))};
+                new BigDecimal(expression.get(index - 1)),
+                new BigDecimal(expression.get(index + 1))};
 
         BigDecimal result = new BigDecimal(0);
 
         if (operation instanceof MultiInputOperation) {
-            String operator = contents.get(index);
+            String operator = expression.get(index);
             result = getResult(operation, variables, operator);
 
         } else if (operation instanceof SingleInputOperation) {
@@ -104,15 +104,15 @@ public class ArithmeticHandler {
         }
 
         //not a typo removes the middle and last value used to calculateAndEmptyContents
-        contents.remove(index);
-        contents.remove(index);
+        expression.remove(index);
+        expression.remove(index);
 
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(9);
         df.setMinimumFractionDigits(0);
 
         //replace first value with result
-        contents.set(index - 1, df.format(result));
+        expression.set(index - 1, df.format(result));
     }
 
     private BigDecimal getResult(Operation operation, BigDecimal[] variables) {
@@ -125,14 +125,14 @@ public class ArithmeticHandler {
         return multiInputOperation.handleOperation(operator, variables);
     }
 
-    private int findCorrespondingEndParenthesis(int start, ArrayList<String> contents) {
+    private int findCorrespondingEndParenthesis(int start, ArrayList<String> expression) {
         //delay is used to skip the next ) if ( is found first
         int delay = 0;
-        for (int i = start; i < contents.size(); i++) {
-            if (contents.get(i).equals("(")) {
+        for (int i = start; i < expression.size(); i++) {
+            if (expression.get(i).equals("(")) {
                 delay++;
 
-            } else if (contents.get(i).equals(")")) {
+            } else if (expression.get(i).equals(")")) {
 
                 if (delay != 0) {
                     delay--;
@@ -145,10 +145,10 @@ public class ArithmeticHandler {
         return -1;
     }
 
-    private ArrayList<Integer> findAllOpenIndex(ArrayList<String> contents) {
+    private ArrayList<Integer> findAllOpenIndex(ArrayList<String> expression) {
         ArrayList<Integer> allIndex = new ArrayList<>();
-        for (int i = 0; i < contents.size(); i++) {
-            if (contents.get(i).equals("(")) {
+        for (int i = 0; i < expression.size(); i++) {
+            if (expression.get(i).equals("(")) {
                 allIndex.add(i);
             }
         }
