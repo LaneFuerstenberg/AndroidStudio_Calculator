@@ -61,9 +61,11 @@ public class ArithmeticHandler {
     private void addingImplicitMultiplication(ArrayList<String> expression) {
         ArrayList<Integer> index = findAllOpenIndex(expression);
         index.remove(Integer.valueOf(0));
+
+        int offset = 0;
         for (int i : index) {
             if (!StringUtil.isOperator(expression.get(i - 1))) {
-                expression.add(i, "*");
+                expression.add(i + offset++, "*");
             }
         }
     }
