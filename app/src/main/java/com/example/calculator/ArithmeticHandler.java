@@ -15,22 +15,24 @@ import java.util.ArrayList;
 Is represented by Calculator class to handle calculations specifically.
  */
 public class ArithmeticHandler {
+    Operation[] operations;
+
+    public ArithmeticHandler() {
+        operations = new Operation[]{
+                new ExponentOperation(),
+                new MultiplyDivideOperation(),
+                new AddSubtractOperation()
+        };
+    }
 
     public String calculateAndEmptyContents(ArrayList<String> expression) {
         while (expression.contains("(")) {
             parenthesisRecursion(expression);
         }
 
-        Operation[] operations = new Operation[]{
-                new ExponentOperation(),
-                new MultiplyDivideOperation(),
-                new AddSubtractOperation()
-        };
-
         for (Operation operation : operations) {
             processOperationForExpression(operation, expression);
         }
-
 
         //done to leave expression array empty
         String result = expression.get(0);
