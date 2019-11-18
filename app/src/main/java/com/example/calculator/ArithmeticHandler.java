@@ -40,21 +40,11 @@ public class ArithmeticHandler {
     }
 
     private void parenthesisRecursion(ArrayList<String> contents) {
-        ArrayList<String> oneLevelDownArray;
-        ArrayList<Integer> index = findAllOpenIndex(contents);
-        index.remove(Integer.valueOf(0));
-
-        for (int i : index) {
-            if (!StringUtil.isOperator(contents.get(i - 1))) {
-                contents.add(i, "*");
-            }
-
-        }
+        addingImplicitMultiplication(contents);
 
         int indexStart = contents.indexOf("(") + 1;
         int indexEnd = findCorrespondingEndParenthesis(indexStart, contents);
-
-        oneLevelDownArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
+        ArrayList<String> oneLevelDownArray = new ArrayList<>(contents.subList(indexStart, indexEnd));
 
         if (oneLevelDownArray.contains("(")) {
             parenthesisRecursion(oneLevelDownArray);
@@ -68,41 +58,16 @@ public class ArithmeticHandler {
         contents.set(indexStart - 1, result);
     }
 
-    private int findCorrespondingEndParenthesis(int start, ArrayList<String> contents) {
-        //delay is used to skip the next ) if ( is found first
-        int delay = 0;
-        for (int i = start; i < contents.size(); i++) {
-            if (contents.get(i).equals("(")) {
-                delay++;
-
-            } else if (contents.get(i).equals(")")) {
-
-                if (delay != 0) {
-                    delay--;
-                } else {
-                    return i;
-                }
+    private void addingImplicitMultiplication(ArrayList<String> contents) {
+        ArrayList<Integer> index = findAllOpenIndex(contents);
+        index.remove(Integer.valueOf(0));
+        for (int i : index) {
+            if (!StringUtil.isOperator(contents.get(i - 1))) {
+                contents.add(i, "*");
             }
         }
-
-        return -1;
     }
 
-    private ArrayList<Integer> findAllOpenIndex(ArrayList<String> contents) {
-        ArrayList<Integer> allIndex = new ArrayList<>();
-        for (int i = 0; i < contents.size(); i++) {
-            if (contents.get(i).equals("(")) {
-                allIndex.add(i);
-            }
-        }
-
-        return allIndex;
-    }
-
-    /*
-    TODO: The coupling of ArithmeticHandler and the Operation subclasses is very tight
-    TODO: Try to make this class work with more general operations and refactor it a ton
-    */
     private void processOperationForExpression(Operation operation, ArrayList<String> contents) {
 
         while (contentsHasOperator(operation, contents)) {
@@ -121,7 +86,6 @@ public class ArithmeticHandler {
             processOperationAtIndex(index, operation, contents);
         }
     }
-
 
     //receives index and processes the items left and right by the index (operation)
     private void processOperationAtIndex(int index, Operation operation, ArrayList<String> contents) {
@@ -159,6 +123,37 @@ public class ArithmeticHandler {
     private BigDecimal getResult(Operation operation, BigDecimal[] variables, String operator) {
         MultiInputOperation multiInputOperation = (MultiInputOperation) operation;
         return multiInputOperation.handleOperation(operator, variables);
+    }
+
+    private int findCorrespondingEndParenthesis(int start, ArrayList<String> contents) {
+        //delay is used to skip the next ) if ( is found first
+        int delay = 0;
+        for (int i = start; i < contents.size(); i++) {
+            if (contents.get(i).equals("(")) {
+                delay++;
+
+            } else if (contents.get(i).equals(")")) {
+
+                if (delay != 0) {
+                    delay--;
+                } else {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private ArrayList<Integer> findAllOpenIndex(ArrayList<String> contents) {
+        ArrayList<Integer> allIndex = new ArrayList<>();
+        for (int i = 0; i < contents.size(); i++) {
+            if (contents.get(i).equals("(")) {
+                allIndex.add(i);
+            }
+        }
+
+        return allIndex;
     }
 
     private boolean matchesAny(String[] searchTerms, String word) {
