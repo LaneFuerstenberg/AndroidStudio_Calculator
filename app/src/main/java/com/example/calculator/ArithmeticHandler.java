@@ -46,7 +46,7 @@ public class ArithmeticHandler {
         int indexEnd = findCorrespondingEndParenthesis(indexStart, expression);
         ArrayList<String> oneLevelDownArray = new ArrayList<>(expression.subList(indexStart, indexEnd));
 
-        if (oneLevelDownArray.contains("(")) {
+        while (oneLevelDownArray.contains("(")) {
             parenthesisRecursion(oneLevelDownArray);
         }
 
