@@ -40,6 +40,10 @@ public class Calculator {
     }
 
     public void receiveOperator(String operator) {
+        if (stagingArea.equals("(")) {
+            return;
+        }
+
         if (StringUtil.isOperator(stagingArea)) {
             stagingArea = operator;
 
