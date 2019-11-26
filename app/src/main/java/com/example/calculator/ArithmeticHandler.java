@@ -66,7 +66,7 @@ public class ArithmeticHandler {
 
         int offset = 0;
         for (int i : index) {
-            if (!StringUtil.isOperator(expression.get(i - 1))) {
+            if (!StringUtil.isOperator(expression.get(i - 1)) && !expression.get(i - 1).equals("(")) {
                 expression.add(i + offset++, "*");
             }
         }
