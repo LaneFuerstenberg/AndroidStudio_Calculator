@@ -65,8 +65,9 @@ public class Calculator {
     }
 
     public void receiveOpenParenthesis() {
-        if (stagingArea.isEmpty()) {
+        if (stagingArea.isEmpty() || resetStagingArea == true) {
             stagingArea = "(";
+            resetStagingArea = false;
         } else {
             commitStagingAreaAndReplace("(");
         }
