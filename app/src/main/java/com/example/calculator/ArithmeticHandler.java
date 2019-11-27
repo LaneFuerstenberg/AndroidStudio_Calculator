@@ -61,13 +61,22 @@ public class ArithmeticHandler {
     }
 
     private void addingImplicitMultiplication(ArrayList<String> expression) {
-        ArrayList<Integer> index = findAllOpenIndex(expression);
-        index.remove(Integer.valueOf(0));
+        ArrayList<Integer> allOpenIndex = findAllIndexForString(expression, "(");
+        allOpenIndex.remove(Integer.valueOf(0));
 
-        int offset = 0;
-        for (int i : index) {
+        int offsetOpen = 0;
+        for (int i : allOpenIndex) {
             if (!StringUtil.isOperator(expression.get(i - 1)) && !expression.get(i - 1).equals("(")) {
-                expression.add(i + offset++, "*");
+                expression.add(i + offsetOpen++, "*");
+            }
+        }
+
+        ArrayList<Integer> allClosedIndex = findAllIndexForString(expression, ")");
+
+        int offsetClosed = 1;
+        for (int i : allClosedIndex) {
+            if (StringUtil.isDigit(expression.get(i + 1))) {
+                expression.add(i + offsetClosed, "*");
             }
         }
     }
@@ -149,10 +158,10 @@ public class ArithmeticHandler {
         return -1;
     }
 
-    private ArrayList<Integer> findAllOpenIndex(ArrayList<String> expression) {
+    private ArrayList<Integer> findAllIndexForString(ArrayList<String> expression, String search) {
         ArrayList<Integer> allIndex = new ArrayList<>();
         for (int i = 0; i < expression.size(); i++) {
-            if (expression.get(i).equals("(")) {
+            if (expression.get(i).equals(search)) {
                 allIndex.add(i);
             }
         }
