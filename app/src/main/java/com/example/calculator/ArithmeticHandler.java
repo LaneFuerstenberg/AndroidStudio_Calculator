@@ -72,6 +72,7 @@ public class ArithmeticHandler {
         }
 
         ArrayList<Integer> allClosedIndex = findAllIndexForString(expression, ")");
+        allClosedIndex.remove(Integer.valueOf(expression.size() - 1));
 
         int offsetClosed = 1;
         for (int i : allClosedIndex) {
