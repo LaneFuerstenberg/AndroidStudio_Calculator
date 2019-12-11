@@ -78,7 +78,7 @@ public class Calculator {
     }
 
     public void receiveCloseParenthesis() {
-        if (areMoreOpenThanClosedParenthesis()) {
+        if (areMoreOpenThanClosedParenthesis() && !stagingArea.equals("(")) {
             if (stagingArea.isEmpty()) {
                 stagingArea = ")";
             } else {
@@ -127,7 +127,9 @@ public class Calculator {
     }
 
     public String calculate() {
-        if (stagingArea.equals("") || StringUtil.isOperator(stagingArea)) {
+        if (stagingArea.equals("")
+                || StringUtil.isOperator(stagingArea)
+                || !asManyOpenAsClosedParenthesis()) {
             return outputDisplay();
         }
 
@@ -136,6 +138,33 @@ public class Calculator {
         resetStagingArea = true;
 
         return stagingArea;
+    }
+
+    private boolean asManyOpenAsClosedParenthesis() {
+        int open = 0;
+        int closed = 0;
+
+        for (int i = 0; i < expression.size(); i++) {
+            String item = expression.get(i);
+
+            if (item.equals("(")) {
+                open++;
+            }
+
+            else if (item.equals(")")) {
+                closed++;
+            }
+        }
+
+        if (stagingArea.equals("(")) {
+            open++;
+        }
+
+        else if (stagingArea.equals(")")) {
+            closed++;
+        }
+
+        return open == closed;
     }
 
 
