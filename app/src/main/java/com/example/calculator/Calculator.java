@@ -144,9 +144,13 @@ public class Calculator {
         int open = 0;
         int closed = 0;
 
-        for (int i = 0; i < expression.size(); i++) {
-            String item = expression.get(i);
-
+        /*
+        rather obtuse solution but is basically trying to add stagingArea to calculating how many
+        parenthesis of each kind exist without being forced to commit stagingArea to expression.
+         */
+        int index = 0;
+        String item = stagingArea;
+        while (index < expression.size()) {
             if (item.equals("(")) {
                 open++;
             }
@@ -154,14 +158,8 @@ public class Calculator {
             else if (item.equals(")")) {
                 closed++;
             }
-        }
 
-        if (stagingArea.equals("(")) {
-            open++;
-        }
-
-        else if (stagingArea.equals(")")) {
-            closed++;
+            item = expression.get(index++);
         }
 
         return open == closed;
