@@ -150,7 +150,7 @@ public class Calculator {
          */
         int index = 0;
         String item = stagingArea;
-        while (index < expression.size()) {
+        do {
             if (item.equals("(")) {
                 open++;
             }
@@ -159,8 +159,10 @@ public class Calculator {
                 closed++;
             }
 
-            item = expression.get(index++);
-        }
+            if (expression.size() > index) {
+                item = expression.get(index);
+            }
+        } while ((index++ < expression.size()));
 
         return open == closed;
     }
